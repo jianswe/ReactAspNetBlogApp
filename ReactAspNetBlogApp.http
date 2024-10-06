@@ -1,0 +1,6 @@
+@ReactAspNetBlogApp_HostAddress = http://localhost:5152
+
+GET {{ReactAspNetBlogApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,4 +1,8 @@
-using Trips.Data;
+using ReactAspNetBlogApp.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +23,36 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register the ITripService interface and its implementation.
-builder.Services.AddScoped<ITripService, TripService>();
+// Load JWT settings from configuration
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+
+// Add Authentication with JWT Bearer
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"], // replace with your issuer
+        ValidAudience = jwtSettings["Audience"], // replace with your audience
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])) // replace with your secret key
+    };
+});
+
+builder.Services.AddAuthorization();
+
+// Register the repository as a singleton or scoped service
+builder.Services.AddScoped<BlogRepository>();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
+    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
