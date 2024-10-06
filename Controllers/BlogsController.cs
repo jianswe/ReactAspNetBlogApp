@@ -16,8 +16,13 @@ public class BlogsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
     {
-        var blogs = await _repository.GetAllAsync();
-        return Ok(blogs);
+        try {
+            var blogs = await _repository.GetAllAsync();
+            return Ok(blogs);
+        } catch(Exception ex) {
+            return BadRequest(ex.Message);
+        }
+        
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<Blog>> GetBlog(int id)

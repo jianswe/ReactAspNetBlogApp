@@ -72,6 +72,18 @@ app.UseStaticFiles(); // This will serve static files from the ClientApp build
 
 app.UseRouting();
 
+app.UseEndpoints(endpoints =>
+{
+    // Map ASP.NET Core controllers or API
+    endpoints.MapControllers();
+});
+
+// Configure fallback for React routes (SPA)
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapFallbackToFile("/ClientApp/build/index.html");
+});
+
 app.UseAuthorization();
 
 app.MapControllers();

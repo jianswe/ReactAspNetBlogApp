@@ -12,3 +12,9 @@ Frontend App:
 cd ClientApp
 npm start
 ```
+
+## How to update DB Schema
+```
+dotnet ef migrations add <MigrationName>
+dotnet ef database update
+```

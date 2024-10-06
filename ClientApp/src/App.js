@@ -1,9 +1,14 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Home } from './components/Home';
-import { Trips } from './components/Trip/Trips'
+import Blogs from './components/Blog/Blogs';
+import Create from './components/Blog/Create';
 
 import logo from './logo.svg';
 import './App.css';
+import Update from './components/Blog/Update';
+import Delete from './components/Blog/Delete';
+
+
 
 function App() {
   return (
@@ -25,7 +30,10 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/trips" element={<Trips />} />
+          <Route path="/create" element={<Create />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/update/:id" element={<Update />} />
+          <Route path="/delete/:id" element={<Delete />} />
         </Routes>
       </Router>
     </div>
