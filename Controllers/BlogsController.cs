@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReactAspNetBlogApp.Data;
 using ReactAspNetBlogApp.Models;
 
 namespace ReactAspNetBlogApp.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class BlogsController : ControllerBase

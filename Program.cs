@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add Identity services
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 // Load JWT settings from configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -72,6 +78,8 @@ app.UseStaticFiles(); // This will serve static files from the ClientApp build
 
 app.UseRouting();
 
+app.UseAuthorization(); // If there are calls to app.UseRouting() and app.UseEndpoints(...), the call to app.UseAuthorization() must go between them.
+
 app.UseEndpoints(endpoints =>
 {
     // Map ASP.NET Core controllers or API
@@ -83,8 +91,6 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapFallbackToFile("/ClientApp/build/index.html");
 });
-
-app.UseAuthorization();
 
 app.MapControllers();
 
